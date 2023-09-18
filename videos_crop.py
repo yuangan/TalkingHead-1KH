@@ -68,6 +68,7 @@ def trim_and_crop(input_dir, output_dir, clip_params):
     output_stream = ffmpeg.output(video_stream, audio_stream, output_filepath)
     ffmpeg.run(output_stream)
 
+
 if __name__ == '__main__':
     # Read list of videos.
     clip_info = []
