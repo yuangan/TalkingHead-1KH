@@ -47,16 +47,26 @@ def trim_and_crop(input_dir, output_dir, clip_params):
         return
 
     h, w = get_h_w(input_filepath)
+    fps = get_fps(input_filepath)
     t = int(T / H * h)
     b = int(B / H * h)
     l = int(L / W * w)
     r = int(R / W * w)
-    stream = ffmpeg.input(input_filepath)
-    stream = ffmpeg.trim(stream, start_frame=S, end_frame=E+1)
-    stream = ffmpeg.crop(stream, l, t, r-l, b-t)
-    stream = ffmpeg.output(stream, output_filepath)
-    ffmpeg.run(stream)
 
+    video_stream = ffmpeg.input(input_filepath).video
+    audio_stream = ffmpeg.input(input_filepath).audio
+
+    video_stream = ffmpeg.trim(video_stream, start_frame=S, end_frame=E+1)
+    video_stream = ffmpeg.crop(video_stream, l, t, r-l, b-t)
+
+    # Trim the audio stream to match the video stream
+    start_time = S / fps
+    end_time = E / fps
+    audio_stream = ffmpeg.trim(audio_stream, start=start_time, end=end_time)
+
+    # Combine video and audio streams
+    output_stream = ffmpeg.output(video_stream, audio_stream, output_filepath)
+    ffmpeg.run(output_stream)
 
 if __name__ == '__main__':
     # Read list of videos.
