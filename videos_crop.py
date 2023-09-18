@@ -31,6 +31,16 @@ def get_h_w(filepath):
     width = int(video_stream['width'])
     return height, width
 
+def get_fps(filepath):
+    # 使用ffmpeg的probe功能来获取视频文件的元数据。
+    probe = ffmpeg.probe(filepath)
+    
+    # 从元数据中找到视频流（因为一个媒体文件可能包含多个流，如视频流、音频流等）。
+    video_stream = next((stream for stream in probe['streams'] if stream['codec_type'] == 'video'), None)
+    
+    # 从视频流中提取平均帧速率（avg_frame_rate）。
+    # 这通常是一个形如"30/1"的字符串，表示每秒30帧。我们使用eval函数来计算这个比率，得到实际的帧速率。
+    return eval(video_stream['avg_frame_rate'])
 
 def trim_and_crop(input_dir, output_dir, clip_params):
     video_name, H, W, S, E, L, T, R, B = clip_params.strip().split(',')
