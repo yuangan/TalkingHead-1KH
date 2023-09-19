@@ -52,33 +52,40 @@ def trim_and_crop(input_dir, output_dir, clip_params):
         return
 
     input_filepath = os.path.join(input_dir, video_name + '.mp4')
-    print(input_filepath)
     if not os.path.exists(input_filepath):
         print('Input file %s does not exist, skipping' % (input_filepath))
         return
 
     h, w = get_h_w(input_filepath)
-    fps = get_fps(input_filepath)
+    # fps = get_fps(input_filepath)
 
     t = int(T / H * h)
     b = int(B / H * h)
     l = int(L / W * w)
     r = int(R / W * w)
 
-    video_stream = ffmpeg.input(input_filepath).video
-    audio_stream = ffmpeg.input(input_filepath).audio
+    # video_stream = ffmpeg.input(input_filepath).video
+    # audio_stream = ffmpeg.input(input_filepath).audio
+    
+    # video_stream = ffmpeg.trim(video_stream, start_frame=S, end_frame=E+1)
+    # video_stream = ffmpeg.crop(video_stream, l, t, r-l, b-t)
+    
+    # print('=================')
+    # print(S, E)
+    # print('=================')
+    # # Trim the audio stream to match the video stream
+    # start_time = S / fps
+    # end_time = (E+1) / fps
+    # audio_stream = audio_stream.filter('atrim', start=start_time, end=end_time).filter('asetpts', 'PTS-STARTPTS')
 
-    video_stream = ffmpeg.trim(video_stream, start_frame=S, end_frame=E+1)
-    video_stream = ffmpeg.crop(video_stream, l, t, r-l, b-t)
-
-    # Trim the audio stream to match the video stream
-    start_time = S / fps
-    end_time = E / fps
-    audio_stream = audio_stream.filter('atrim', start=start_time, end=end_time).filter('asetpts', 'PTS-STARTPTS')
-
-    # Combine video and audio streams
-    output_stream = ffmpeg.output(video_stream, audio_stream, output_filepath)
-    ffmpeg.run(output_stream)
+    # # Combine video and audio streams
+    # output_stream = ffmpeg.output(video_stream, audio_stream, output_filepath)
+    # ffmpeg.run(output_stream)
+    stream = ffmpeg.input(input_filepath)
+    stream = ffmpeg.trim(stream, start_frame=S, end_frame=E+1)
+    stream = ffmpeg.crop(stream, l, t, r-l, b-t)
+    stream = ffmpeg.output(stream, output_filepath)
+    ffmpeg.run(stream)
 
 if __name__ == '__main__':
     # Read list of videos.
@@ -94,7 +101,8 @@ if __name__ == '__main__':
     downloader = partial(trim_and_crop, args.input_dir, args.output_dir)
 
     start = timer()
-    pool_size = args.num_workers
+    # pool_size = args.num_workers
+    pool_size = 1
     print('Using pool size of %d' % (pool_size))
     with mp.Pool(processes=pool_size) as p:
         _ = list(tqdm(p.imap_unordered(downloader, clip_info), total=len(clip_info)))

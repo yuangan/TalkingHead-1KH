@@ -22,22 +22,22 @@ def download_video(output_dir, video_id):
     merged_path = os.path.join(output_dir, video_id + '.mp4')
     if not os.path.isfile(merged_path):
         try:
-            yt = YouTube('https://www.youtube.com/watch?v=%s' % (video_id))
+            yt = YouTube('https://www.youtube.com/watch?v=%s' % (video_id), proxies={'http': '127.0.0.1:7890', 'https': '127.0.0.1:7890',})
             
             # Get the highest quality video and audio streams
             video_stream = yt.streams.filter(subtype='mp4', only_video=True, adaptive=True).first()
             audio_stream = yt.streams.filter(only_audio=True, adaptive=True).first()
             
             # Download the streams
-            video_path = video_stream.download(output_path=output_dir, filename=video_id + '_video.mp4')
+            video_path = video_stream.download(output_path=output_dir, filename=video_id )
             audio_path = audio_stream.download(output_path=output_dir, filename=video_id + '_audio.mp4')
             
-            # Merge the video and audio
-            os.system(f'ffmpeg -i {video_path} -i {audio_path} -c:v copy -c:a aac {merged_path}')
+            # # Merge the video and audio
+            # os.system(f'ffmpeg -i {video_path} -i {audio_path} -c:v copy -c:a aac {merged_path}')
             
-            # Optionally, remove the separate video and audio files to save space
-            os.remove(video_path)
-            os.remove(audio_path)
+            # # Optionally, remove the separate video and audio files to save space
+            # os.remove(video_path)
+            # os.remove(audio_path)
             
         except Exception as e:
             print(e)
