@@ -29,7 +29,7 @@ def download_video(output_dir, video_id):
             audio_stream = yt.streams.filter(only_audio=True, adaptive=True).first()
             
             # Download the streams
-            video_path = video_stream.download(output_path=output_dir, filename=video_id)
+            video_path = video_stream.download(output_path=output_dir, filename=video_id + '.mp4')
             audio_path = audio_stream.download(output_path=output_dir, filename=video_id + '_audio.mp4')
             
             # # Merge the video and audio
