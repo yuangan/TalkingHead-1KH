@@ -52,12 +52,14 @@ def trim_and_crop(input_dir, output_dir, clip_params):
         return
 
     input_filepath = os.path.join(input_dir, video_name + '.mp4')
+    print(input_filepath)
     if not os.path.exists(input_filepath):
         print('Input file %s does not exist, skipping' % (input_filepath))
         return
 
     h, w = get_h_w(input_filepath)
     fps = get_fps(input_filepath)
+
     t = int(T / H * h)
     b = int(B / H * h)
     l = int(L / W * w)
@@ -72,12 +74,11 @@ def trim_and_crop(input_dir, output_dir, clip_params):
     # Trim the audio stream to match the video stream
     start_time = S / fps
     end_time = E / fps
-    audio_stream = ffmpeg.trim(audio_stream, start=start_time, end=end_time)
+    audio_stream = audio_stream.filter('atrim', start=start_time, end=end_time).filter('asetpts', 'PTS-STARTPTS')
 
     # Combine video and audio streams
     output_stream = ffmpeg.output(video_stream, audio_stream, output_filepath)
     ffmpeg.run(output_stream)
-
 
 if __name__ == '__main__':
     # Read list of videos.
