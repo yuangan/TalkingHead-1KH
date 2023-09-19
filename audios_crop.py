@@ -75,6 +75,9 @@ def trim_and_crop(input_dir, output_dir, clip_params):
     video_path=output_filepath.replace('_full_', '_')[:-10]+'.mp4'
     final_output=output_filepath[:-10]+'.mp4'
     os.system(f'/usr/bin/ffmpeg -i {video_path} -i {output_filepath} -c:v copy -c:a aac -crf 20 {final_output}')
+    os.remove(video_path)
+    os.remove(output_filepath)
+
 
 
 if __name__ == '__main__':
