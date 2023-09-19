@@ -8,3 +8,5 @@ python videos_download.py --input_list data_list/${dataset}_video_ids.txt --outp
 
 # Extract the talking head clips.
 python videos_crop.py --input_dir ${dataset}/1min_clips/ --output_dir ${dataset}/cropped_clips --clip_info_file data_list/${dataset}_video_tubes.txt
+
+python audios_crop.py --input_dir ${dataset}/1min_clips/ --output_dir ${dataset}/cropped_clips --clip_info_file data_list/${dataset}_video_tubes.txt
