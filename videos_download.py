@@ -11,9 +11,11 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--input_list', type=str, required=True,
                     help='List of youtube video ids')
 parser.add_argument('--output_dir', type=str, default='data/youtube_videos',
-parser.add_argument('--start', type=int, default='50',
-parser.add_argument('--end', type=int, default='51',
                     help='Location to download videos')
+parser.add_argument('--start', type=int, default='50',
+                    help='start offset')
+parser.add_argument('--end', type=int, default='51',
+                    help='end offset')
 parser.add_argument('--num_workers', type=int, default=8,
                     help='How many multiprocessing workers?')
 args = parser.parse_args()
