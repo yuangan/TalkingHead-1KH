@@ -11,6 +11,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--input_list', type=str, required=True,
                     help='List of youtube video ids')
 parser.add_argument('--output_dir', type=str, default='data/youtube_videos',
+parser.add_argument('--start', type=int, default='50',
+parser.add_argument('--end', type=int, default='51',
                     help='Location to download videos')
 parser.add_argument('--num_workers', type=int, default=8,
                     help='How many multiprocessing workers?')
@@ -52,7 +54,7 @@ if __name__ == '__main__':
     with open(args.input_list) as fin:
         for line in fin:
             video_ids.append(line.strip())
-
+    video_ids = video_ids[start:end]
     # Create output folder.
     os.makedirs(args.output_dir, exist_ok=True)
 
