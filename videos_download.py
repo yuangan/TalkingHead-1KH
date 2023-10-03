@@ -56,7 +56,7 @@ if __name__ == '__main__':
     with open(args.input_list) as fin:
         for line in fin:
             video_ids.append(line.strip())
-    video_ids = video_ids[start:end]
+    video_ids = video_ids[args.start:args.end]
     # Create output folder.
     os.makedirs(args.output_dir, exist_ok=True)
 
