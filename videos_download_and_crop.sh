@@ -1,6 +1,6 @@
 dataset=$1
-s = 0 # start
-e = 5 # end
+s=0 # start
+e=5 # end
 # Download the videos.
 python videos_download.py --input_list data_list/${dataset}_video_ids.txt --output_dir ${dataset}/raw_videos --start  ${s} --end ${e}
 

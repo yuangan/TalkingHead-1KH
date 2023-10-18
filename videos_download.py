@@ -36,12 +36,12 @@ def download_video(output_dir, video_id):
             video_path = video_stream.download(output_path=output_dir, filename=video_id + '.mp4')
             audio_path = audio_stream.download(output_path=output_dir, filename=video_id + '_audio.mp4')
             
-            # # Merge the video and audio
-            #os.system(f'ffmpeg -i {video_path} -i {audio_path} -c:v copy -c:a aac {merged_path}')
+            # Merge the video and audio
+            os.system(f'ffmpeg -i {video_path} -i {audio_path} -c:v copy -c:a aac {merged_path}')
             
-            # # Optionally, remove the separate video and audio files to save space
+            # Optionally, remove the separate video and audio files to save space
             # os.remove(video_path)
-            #os.remove(audio_path)
+            os.remove(audio_path)
             
         except Exception as e:
             print(e)
